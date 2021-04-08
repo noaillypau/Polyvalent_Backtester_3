@@ -421,10 +421,13 @@ Dependency
 Todos
 =====
 
+- [ ] remake the dataset module
+	- [ ] make it more intuitive and flexible
 - [ ] More datas
 	- [ ] ftx -> trades datas to 1min ohlc (cf. bybit)
 	- [ ] binance
 	- [ ] bitfinex
+	- [x] bitmex
 - [ ] Grid Optimization
 	- [ ] finish testing of grid optimization
 	- [ ] clean code
