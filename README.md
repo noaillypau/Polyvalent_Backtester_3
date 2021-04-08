@@ -5,8 +5,6 @@ Attempt to make the most polyvalent backtester possible, for all markets while s
 
 When testing a new strategy, one can often loose a lot of time building a new backtesting script, escpecially if the strategy uses non common features and logic.
 
-Reducing the time writting thos scripts allows to test more strategy.
-
 The goal of this repo is to make backtesting easier and faster by building a polyvalent script that is compatible with every kind of strategy. 
 
 
