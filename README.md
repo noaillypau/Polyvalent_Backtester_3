@@ -419,6 +419,7 @@ Dependency
 Todos
 =====
 
+- [ ] Speed up compilations with numba
 - [ ] remake the dataset module
 	- [ ] make it more intuitive and flexible
 - [ ] More datas
