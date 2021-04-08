@@ -431,5 +431,5 @@ Todos
 	- [ ] finish testing of grid optimization
 	- [ ] clean code
 - [ ] Smart Optimization
-- [ ] Software ?
+- [ ] Software / GUI ?
 
