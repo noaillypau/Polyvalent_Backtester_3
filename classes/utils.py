@@ -55,7 +55,7 @@ def json_to_dic(path):
 
 def dic_to_json(dic, path):
     with open(path, 'w') as f:
-        json.load(dic)
+        json.dump(dic, f)
         f.close()
 
 

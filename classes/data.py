@@ -1,7 +1,7 @@
 import numpy as np, pandas as pd, json, os, datetime, time
 import talib as ta
 import MetaTrader5 as mt5
-from dataManager import DataManager, Dataset
+from dataManager import Dataset
 from tqdm import tqdm
 import inspect
 
@@ -21,8 +21,8 @@ class Datas():
         if self.debug:
             print(f'[{datetime.datetime.now()}] - {msg}')
 
-    def add_dataset(self, name, dataset, timeframe='1min'):
-        self.datasets.add(name, dataset, timeframe)
+    def add_dataset(self, name, dataset):
+        self.datasets.add(name, dataset)
 
     def set_transformers(self, transformers):
         self.transformers = transformers
@@ -98,14 +98,7 @@ class Datas():
         # transformers
         for name,dataset in self.datasets._dict.items():
             dic['datasets'][name] = {
-                "name": name,
-                "field": dataset.field,
-                "broker": dataset.broker,
-                "instrument": dataset.instrument,
-                "symbol": dataset.symbol,
-                "timeframe": dataset.timeframe,
                 "path": dataset.path,
-                "resampling_dict": dataset.resampling_dict,
                 "infos": dataset.infos
             }
 
@@ -142,8 +135,7 @@ class Datasets(object):
         #super(Datasets, self).__init__()
         self._dict = {}
     
-    def add(self, name, dataset, timeframe='1min'):
-        dataset.timeframe = timeframe
+    def add(self, name, dataset):
         self._dict[name] = dataset
         setattr(self, name, dataset)
 

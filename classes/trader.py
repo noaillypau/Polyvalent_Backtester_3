@@ -303,16 +303,22 @@ class Trader():
     def compute_iteration_of_orders(self, list_orders, index, debug=False):
         
         if debug:
-            print('\n\n ### order list:')
-            print(self.datas.arr_order_lists[index])
-            print('\n\n### iteration -',index)
+            txt = ''
+            txt += '\n\n ### order list:'
+            txt += str(self.datas.arr_order_lists[index])
+            txt += '\n\n### iteration - '+str(index)
             
-            print('\n## pending:')
-            print(pp(self.pending_orders))
-            print('\n## positions:')
-            print(pp(self.positions))
-            print('\n## bid',self.get_arr_value('BTCUSD', 'bid_close', index),' ask:',self.get_arr_value('BTCUSD', 'ask_close', index))
-            print('\n## pnl:\n',self.current_pnl)
+            txt += '\n## pending:'
+            txt += str(self.pending_orders)
+            txt += '\n## positions:'
+            txt += str(self.positions)
+            txt += '\n## bid '+str(self.get_arr_value('main', 'bid_close', index))+' ask: '+str(self.get_arr_value('main', 'ask_close', index))
+            txt += '\n## pnl:\n' + str(self.current_pnl)
+
+
+            with open('log.txt','a') as f:
+                f.write(txt)
+                f.close()
         
         # update unrealized pnl
         list_positions = self.positions.items()
@@ -320,9 +326,13 @@ class Trader():
             self.upd_upnl(position, index) 
         
         if debug:
-            print('\n\n ### POSITION POST UPD UPNL ###:')
-            print('\n## positions:')
-            print(pp(self.positions))
+            txt = ''
+            txt += '\n\n ### POSITION POST UPD UPNL ###:'
+            txt += '\n## positions:'
+            txt += str(self.positions)
+            with open('log.txt','a') as f:
+                f.write(txt)
+                f.close()
         
         # check pendng order filling
         list_pendings = self.pending_orders.items()
@@ -346,14 +356,19 @@ class Trader():
             self.compute_order(order, index)
         
         if debug:
-            print('\n##### After actions #####')
-            print('\n## pending:')
-            print(pp(self.pending_orders))
-            print('\n## positions:')
-            print(pp(self.positions))
-            print('\n## bid',self.get_arr_value('BTCUSD', 'bid_close', index),' ask:',self.get_arr_value('BTCUSD', 'ask_close', index))
-            print('\n## pnl:\n',self.current_pnl)
-            print('\n################################\n')
+            txt = ''
+            txt += '\n##### After actions #####'
+            txt += '\n## pending:'
+            txt += str(self.pending_orders)
+            txt += '\n## positions:'
+            txt += str(self.positions)
+            txt += '\n## bid '+str(self.get_arr_value('main', 'bid_close', index))+' ask: '+str(self.get_arr_value('main', 'ask_close', index))
+            txt += '\n## pnl:\n' + str(self.current_pnl)
+            txt += '\n################################\n'
+
+            with open('log.txt','a') as f:
+                f.write(txt)
+                f.close()
 
 
     def backtest(self, use_tqdm=True, debug_step = 0):
@@ -366,6 +381,10 @@ class Trader():
             debug = False
         else:
             debug = True
+            try:
+                os.remove('log.txt')
+            except:
+                pass
 
         if debug:
             for i in pbar:
@@ -408,7 +427,7 @@ class Trader():
         res[0] = {
             "cumulative_pnl": mult * arr_pnl.sum(),
             "avg_pnl_per_trades": mult * arr_pnl.mean(),
-            "sharpe_ratio_trades": arr_pnl.mean()/arr_pnl.std(),
+            "daily_sharpe_ratio": df_daily.pnl.mean()/df_daily.pnl.std(),
             "profit_factor": - arr_pnl[arr_pnl>0].sum() / arr_pnl[arr_pnl<0].sum(),
             "accuracy_trades": len(arr_pnl[arr_pnl>0]) / len(arr_pnl),
             "proportion_sl": len(df_trades.loc[df_trades.exit_type=='sl']) / len(arr_pnl),
