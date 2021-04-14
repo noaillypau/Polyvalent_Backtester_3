@@ -429,7 +429,7 @@ grid_opt.print_template_params() # print a template of th params_choices diction
 
 
 ```python
-from classes.optimizers import OptimizerSharpeRatio
+from classes.optimizers import OptimizerSharpeRatio, Metric
 
 params_choices = {
   'strategies__name1__p1': [0.1, 0.5, 0.7],
