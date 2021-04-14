@@ -38,6 +38,7 @@ Table of contents
       * [Order](#Order)
       * [Trader](#Trader)
       * [gridOpt](#gridOpt)
+      * [bayesianOpt](#BayesianOpt)
       * [smartOpt](#smartOpt)
    * [Dependency](#dependency)
    * [Todos](#todos)
@@ -410,6 +411,17 @@ Trader
 GridOpt
 -----
 
+Naive optimization. Run the cartesian product of all configs on an in sample dataset, then takes the best config according to the optimizer chosen.
+
+There is also a rolling optimization mode, that rolls the in sample, and return a backtesting object instead of the best params.
+
+BayesianOpt
+-----
+
+Run a bayesian optimization on an in-sample dataset.
+
+Similarely to grid opt, there is also a rolling optimization mode.
+
 SmartOpt
 -----
 
@@ -421,14 +433,14 @@ Todos
 
 - [ ] Speed up compilations with numba
 - [ ] remake the dataset module
-	- [ ] make it more intuitive and flexible
+	- [x] make it more intuitive and flexible
 - [ ] More datas
 	- [ ] ftx -> trades datas to 1min ohlc (cf. bybit)
 	- [ ] binance
 	- [ ] bitfinex
 	- [x] bitmex
 - [ ] Grid Optimization
-	- [ ] finish testing of grid optimization
+	- [x] finish testing of grid optimization
 	- [ ] clean code
 - [ ] Smart Optimization
 - [ ] Software / GUI ?
