@@ -16,6 +16,14 @@ class Datas():
         self.start_year, self.start_month, self.end_year, self.end_month = start_year, start_month, end_year, end_month
 
 
+    def edit_params(self, dic_params):
+        if 'strategies' in dic_params:
+            for name,params in dic_params['strategies'].items():
+                self.strategies.set_params(name, params)
+        if 'transformers' in dic_params:
+            for name,params in dic_params['transformers'].items():
+                self.transformers.set_params(name, params)
+
 
     def log(self, msg):
         if self.debug:
@@ -38,42 +46,52 @@ class Datas():
 
         self.compile_strategies()
 
-    def compile_datasets(self):
-        print(f'\n[{datetime.datetime.now()}] - Starting datasets compilation...')
+    def compile_datasets(self, printing=False):
+        if printing:
+            print(f'\n[{datetime.datetime.now()}] - Starting datasets compilation...')
         nbs_datasets = 0
         for name, dataset in self.datasets._dict.items():
             self.log(f'Adding dataset {name}')
             self._dfs[name] = dataset.get_df(self.start_year, self.start_month, self.end_year, self.end_month, add_date=True).ffill()
             nbs_datasets += 1
-        print(f'[{datetime.datetime.now()}] - {nbs_datasets} datasets have been compiled.')
+        if printing:
+            print(f'[{datetime.datetime.now()}] - {nbs_datasets} datasets have been compiled.')
 
-    def compile_transformers(self):
-        print(f'\n[{datetime.datetime.now()}] - Starting transformers compilation...')
+    def compile_transformers(self, printing=False):
+        if printing:
+            print(f'\n[{datetime.datetime.now()}] - Starting transformers compilation...')
         nbs_transformers = 0
         for name, transformer in self.transformers._dict.items():
             self._dfs = transformer.apply_on(self._dfs)
             nbs_transformers += 1
         self.create_arrs()
-        print(f'[{datetime.datetime.now()}] - {nbs_transformers} transformers have been compiled.')
+        if printing:
+            print(f'[{datetime.datetime.now()}] - {nbs_transformers} transformers have been compiled.')
 
     def create_arrs(self):
         for symbol in self._dfs:
             self._arrs[symbol] = {col:self._dfs[symbol][col].to_numpy() for col in self._dfs[symbol].columns}
 
-    def compile_strategies(self):
+    def compile_strategies(self, printing=False):
         list_symbol = [key for key in self.strategies.get_dic_symbol_strategy()]
 
-        print(f'\n[{datetime.datetime.now()}] - Starting strategies compilation...')
+        if printing:
+            print(f'\n[{datetime.datetime.now()}] - Starting strategies compilation...')
         time.sleep(0.5)
 
 
 
         arr_order_lists = np.empty(len(self._arrs[list_symbol[0]]['time']), dtype=object)
-        for i in tqdm(range(len(arr_order_lists))):
-            arr_order_lists[i] = self.strategies.compute(self._arrs, i)
+        if printing:
+            for i in tqdm(range(len(arr_order_lists))):
+                arr_order_lists[i] = self.strategies.compute(self._arrs, i)
+        else:
+            for i in range(len(arr_order_lists)):
+                arr_order_lists[i] = self.strategies.compute(self._arrs, i)
             
             
-        print(f'[{datetime.datetime.now()}] - {len(self.strategies._dict)} strategies have been compiled.')
+        if printing:
+            print(f'[{datetime.datetime.now()}] - {len(self.strategies._dict)} strategies have been compiled.')
 
         self.arr_order_lists = arr_order_lists
 
@@ -121,6 +139,11 @@ class Datas():
             }
 
         return dic
+
+
+
+
+
 
 
 
