@@ -415,12 +415,49 @@ Naive optimization. Run the cartesian product of all configs on an in sample dat
 
 There is also a rolling optimization mode, that rolls the in sample, and return a backtesting object instead of the best params.
 
+In general we don't advice this optimization at it can be rather slow du to the ammount of configs possible.
+
+But it can still be usefull to see how the strategy by shifting one or two parameter.
+
+```python
+from classes.optGrid import GridOpt
+
+grid_opt = GridOpt(datas, 
+		   prop_in_sample=0.7) # proportion of data to use as in-sample data
+grid_opt.print_template_params() # print a template of th params_choices dictionnary for easier input
+```
+
+
+```python
+from classes.optimizers import OptimizerSharpeRatio
+
+params_choices = {
+  'strategies__name1__p1': [0.1, 0.5, 0.7],
+  'strategies__name1__p2': [100, 200],
+  'transformers__name1__p1': [3],
+  'transformers__name1__p2': [14],
+  'transformers__name2__p1': [2,5],
+  'transformers__name2__p2': [50,100,200],
+  'transformers__name3__p1': [0,1,2],
+  'transformers__name3__p2': [200],
+}
+opt = OptimizerSharpeRatio(min_metrics={Metric.daily_return: 0.005}, max_metrics={}) # setup the optimizer with optinal conditions
+
+list_results = grid_opt.run(params_choices, opt) # run optimization and set best parameters & model
+```
+
+```python
+grid_opt.test_best_model() # after the opt.run() test the best parameters obtained on in-sample data and test it on the out-sample datas
+```
+
 BayesianOpt
 -----
 
 Run a bayesian optimization on an in-sample dataset.
 
 Similarely to grid opt, there is also a rolling optimization mode.
+
+
 
 SmartOpt
 -----
@@ -439,9 +476,13 @@ Todos
 	- [ ] binance
 	- [ ] bitfinex
 	- [x] bitmex
-- [ ] Grid Optimization
+- [x] Grid Optimization
 	- [x] finish testing of grid optimization
-	- [ ] clean code
+	- [x] clean code
+- [ ] Bayesian Optimization
+	- [x] fix bayesian opt
+	- [ ] clean output
+	- [ ] implement rolling opt
 - [ ] Smart Optimization
 - [ ] Software / GUI ?
 
