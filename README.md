@@ -457,6 +457,8 @@ Run a bayesian optimization on an in-sample dataset.
 
 Similarely to grid opt, there is also a rolling optimization mode.
 
+![alt text](src/ex_pnl_img.PNG)
+
 
 
 SmartOpt
